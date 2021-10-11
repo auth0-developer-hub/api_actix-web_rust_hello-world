@@ -1,0 +1,9 @@
+.direnv/
+nix/
+.envrc
+shell.nix
+
+
+# Added by cargo
+
+/target
