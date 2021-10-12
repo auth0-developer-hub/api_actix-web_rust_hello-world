@@ -1,18 +1,24 @@
-use actix_web::{get, App, HttpResponse, HttpServer, Responder};
+use actix_web::{get, web, App, HttpServer, Responder};
+use serde::{Serialize};
+
+#[derive(Serialize)]
+struct Response {
+    message: &'static str
+}
 
 #[get("/api/messages/public")]
 async fn public() -> impl Responder {
-    HttpResponse::Ok().body("public")
+    web::Json(Response { message: "The API doesn't require an access token to share this message." })
 }
 
 #[get("/api/messages/protected")]
 async fn protected() -> impl Responder {
-    HttpResponse::Ok().body("protected")
+    web::Json(Response { message: "The API successfully validated your access token." })
 }
 
 #[get("/api/messages/admin")]
 async fn admin() -> impl Responder {
-    HttpResponse::Ok().body("admin")
+    web::Json(Response { message: "The API successfully recognized you as an admin." })
 }
 
 #[actix_web::main]
