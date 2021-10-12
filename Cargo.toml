@@ -9,8 +9,11 @@ rust-version = "1.56"
 
 [dependencies]
 actix-cors = "^0.5.4"
-actix-web = "^3.3.2"
+actix-web = { version = "^3.3.2" , features = ["rustls"] }
+actix-web-httpauth = "^0.5.1"
+derive_more = "^0.99.16"
 dotenv = "^0.15.0"
 env_logger = "^0.9.0"
 envy = "^0.4.2"
+jsonwebtoken = "^8.0.0-beta.6"
 serde = "^1.0.130"
