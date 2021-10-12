@@ -277,6 +277,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "api_actix-web_rust_hello-world"
+version = "0.1.0"
+dependencies = [
+ "actix-web",
+]
+
+[[package]]
 name = "async-trait"
 version = "0.1.51"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1181,13 +1188,6 @@ checksum = "52e44394d2086d010551b14b53b1f24e31647570cd1deb0379e2c21b329aba00"
 dependencies = [
  "hostname",
  "quick-error",
-]
-
-[[package]]
-name = "rust-example"
-version = "0.1.0"
-dependencies = [
- "actix-web",
 ]
 
 [[package]]
