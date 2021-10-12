@@ -1,28 +1,29 @@
-use actix_web::{get, post, web, App, HttpResponse, HttpServer, Responder};
+use actix_web::{get, App, HttpResponse, HttpServer, Responder};
 
-#[get("/")]
-async fn hello() -> impl Responder {
-    HttpResponse::Ok().body("Hello world!")
+#[get("/api/messages/public")]
+async fn public() -> impl Responder {
+    HttpResponse::Ok().body("public")
 }
 
-#[post("/echo")]
-async fn echo(req_body: String) -> impl Responder {
-    HttpResponse::Ok().body(req_body)
+#[get("/api/messages/protected")]
+async fn protected() -> impl Responder {
+    HttpResponse::Ok().body("protected")
 }
 
-async fn manual_hello() -> impl Responder {
-    HttpResponse::Ok().body("Hey there!")
+#[get("/api/messages/admin")]
+async fn admin() -> impl Responder {
+    HttpResponse::Ok().body("admin")
 }
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     HttpServer::new(|| {
         App::new()
-            .service(hello)
-            .service(echo)
-            .route("/hey", web::get().to(manual_hello))
+            .service(public)
+            .service(protected)
+            .service(admin)
     })
-    .bind("127.0.0.1:8080")?
+    .bind("127.0.0.1:6060")?
     .run()
     .await
 }
