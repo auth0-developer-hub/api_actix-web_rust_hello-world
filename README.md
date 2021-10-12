@@ -2,13 +2,11 @@
 
 This sample uses [actix-web-httpauth][actix-web-httpauth] and [jsonwebtoken][jsonwebtoken] to implement the following security tasks:
 
-The `add-authorization` branch offers a working API server that exposes a public endpoint along with two protected endpoints. Each endpoint returns a different type of message: public, protected, and admin.
+The `add-rbac` branch offers a working API server that exposes a public endpoint along with two protected endpoints. Each endpoint returns a different type of message: public, protected, and admin.
 
 The `GET /api/messages/protected` and `GET /api/messages/admin` endpoints are protected against unauthorized access. Any requests that contain a valid access token in their authorization header can access the protected and admin data.
 
-However, you should require that only access tokens that contain a `read:admin-messages` permission can access the admin data, which is referred to as [Role-Based Access Control (RBAC)](https://auth0.com/docs/authorization/rbac/).
-
-[Check out the `add-rbac` branch]() to see authorization and Role-Based Access Control (RBAC) in action using Auth0.
+Additionally, the `GET /api/messages/admin` endpoint requires the access tokens to contain a `read:admin-messages` permission in order to access the admin data, which is referred to as [Role-Based Access Control (RBAC)](https://auth0.com/docs/authorization/rbac/).
 
 ## Quick Auth0 Set Up
 
@@ -27,8 +25,6 @@ Install the project dependencies:
 ```bash
 cargo build
 ```
-
-Install the project dependencies:
 
 Create `.env` file under the project directory:
 
@@ -123,6 +119,22 @@ Replace the value of `http://path_to_your_api/` with your protected API endpoint
 
 You can try out any of our full stack demos to see the client-server Auth0 workflow in action using your preferred front-end and back-end technologies.
 
+## Test the Admin Endpoint
+
+The `GET /api/messages/admin` endpoint requires the access token to contain the `read:admin-messages` permission. The best way to simulate that client-server secured request is to use any of the Hello World client demo apps to log in as a user that has that permission.
+
+You can use the Auth0 Dashboard to create an `admin` role and assign it the`read:admin-messages` permission. Then, you can assign the `admin` role to any user that you want to access the `/admin` endpoint.
+
+If you need help doing so, check out the following resources:
+
+- [Create roles](https://auth0.com/docs/authorization/rbac/roles/create-roles)
+
+- [Create permissions](https://auth0.com/docs/get-started/dashboard/add-api-permissions)
+
+- [Add permissions to roles](https://auth0.com/docs/authorization/rbac/roles/add-permissions-to-roles)
+
+- [Assign roles to users](https://auth0.com/docs/users/assign-roles-to-users)
+
 ## API Endpoints
 
 ### 🔓 Get public message
@@ -165,7 +177,7 @@ Status: 200 OK
 
 ### 🔐 Get admin message
 
-> You need to protect this endpoint using Role-Based Access Control (RBAC).
+> Requires the user to have the `read:admin-messages` permission.
 
 ```bash
 GET /api/messages/admin
