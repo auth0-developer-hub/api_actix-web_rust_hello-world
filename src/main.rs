@@ -1,4 +1,4 @@
-use actix_web::{get, web, App, HttpServer, Responder};
+use actix_web::{get, middleware::Logger, web, App, HttpServer, Responder};
 use serde::{Deserialize, Serialize};
 use std::net::SocketAddr;
 
@@ -38,9 +38,11 @@ async fn not_found() -> impl Responder {
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
+    env_logger::init();
     let config = envy::from_env::<Config>().expect("Provide missing environment variables");
     HttpServer::new(|| {
         App::new()
+            .wrap(Logger::default())
             .service(public)
             .service(protected)
             .service(admin)
