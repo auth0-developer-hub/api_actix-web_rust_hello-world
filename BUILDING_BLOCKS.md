@@ -203,3 +203,4 @@ async fn main() -> std::io::Result<()> {
 
 - https://actix.rs/#responders
 - https://actix.rs/docs/errors/
+- https://www.thorsten-hans.com/working-with-environment-variables-in-rust/
