@@ -1,4 +1,4 @@
-use actix_web::{get, middleware::Logger, web, App, HttpServer, Responder};
+use actix_web::{dev, get, http, middleware, web, App, HttpServer, Responder, Result};
 use serde::{Deserialize, Serialize};
 use std::net::SocketAddr;
 
@@ -32,6 +32,17 @@ async fn admin() -> impl Responder {
     web::Json(Response { message: "The API successfully recognized you as an admin." })
 }
 
+#[get("/500")]
+async fn error_500() -> impl Responder {
+    web::HttpResponse::InternalServerError()
+}
+
+fn internal_error<B>(mut res: dev::ServiceResponse<B>) -> Result<middleware::errhandlers::ErrorHandlerResponse<B>> {
+    res.headers_mut().insert(http::header::CONTENT_TYPE, http::HeaderValue::from_static("application/json"));
+    // TODO: serialize Response in the response body
+    Ok(middleware::errhandlers::ErrorHandlerResponse::Response(res))
+}
+
 async fn not_found() -> impl Responder {
     web::HttpResponse::NotFound().json(Response { message: "Not found" })
 }
@@ -42,10 +53,15 @@ async fn main() -> std::io::Result<()> {
     let config = envy::from_env::<Config>().expect("Provide missing environment variables");
     HttpServer::new(|| {
         App::new()
-            .wrap(Logger::default())
+            .wrap(
+                middleware::errhandlers::ErrorHandlers::new()
+                    .handler(http::StatusCode::INTERNAL_SERVER_ERROR, internal_error)
+            )
+            .wrap(middleware::Logger::default())
             .service(public)
             .service(protected)
             .service(admin)
+            .service(error_500)
             .default_service(web::to(not_found))
     })
     .bind(SocketAddr::from(([127, 0, 0, 1], config.port)))?
