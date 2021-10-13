@@ -8,4 +8,5 @@ edition = "2018"
 
 [dependencies]
 actix-web = "^3.3.2"
+envy = "^0.4.2"
 serde = "^1.0.130"

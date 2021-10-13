@@ -1,9 +1,20 @@
 use actix_web::{get, web, App, HttpServer, Responder};
-use serde::{Serialize};
+use serde::{Deserialize, Serialize};
+use std::net::SocketAddr;
+
+#[derive(Deserialize)]
+struct Config {
+    #[serde(default="default_port")]
+    port: u16,
+}
 
 #[derive(Serialize)]
 struct Response {
-    message: &'static str
+    message: &'static str,
+}
+
+fn default_port() -> u16 {
+    6060
 }
 
 #[get("/api/messages/public")]
@@ -27,6 +38,7 @@ async fn not_found() -> impl Responder {
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
+    let config = envy::from_env::<Config>().expect("Provide missing environment variables");
     HttpServer::new(|| {
         App::new()
             .service(public)
@@ -34,7 +46,7 @@ async fn main() -> std::io::Result<()> {
             .service(admin)
             .default_service(web::to(not_found))
     })
-    .bind("127.0.0.1:6060")?
+    .bind(SocketAddr::from(([127, 0, 0, 1], config.port)))?
     .run()
     .await
 }
