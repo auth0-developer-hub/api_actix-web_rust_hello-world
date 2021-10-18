@@ -1,8 +1,10 @@
+mod types;
+
 use actix_cors::Cors;
 use actix_web::{dev, get, http, middleware, web, App, HttpServer, Responder, Result};
 use dotenv::dotenv;
 use env_logger::Env;
-use serde::{Deserialize, Serialize};
+use serde::Deserialize;
 use serde_json::json;
 
 #[derive(Clone, Deserialize)]
@@ -11,28 +13,23 @@ struct Config {
     client_origin_url: String,
 }
 
-#[derive(Serialize)]
-struct Response {
-    message: &'static str,
-}
-
 #[get("/api/messages/public")]
 async fn public() -> impl Responder {
-    web::Json(Response {
+    web::Json(types::Response {
         message: "The API doesn't require an access token to share this message.",
     })
 }
 
 #[get("/api/messages/protected")]
 async fn protected() -> impl Responder {
-    web::Json(Response {
+    web::Json(types::Response {
         message: "The API successfully validated your access token.",
     })
 }
 
 #[get("/api/messages/admin")]
 async fn admin() -> impl Responder {
-    web::Json(Response {
+    web::Json(types::Response {
         message: "The API successfully recognized you as an admin.",
     })
 }
@@ -44,7 +41,7 @@ fn internal_error<B>(
         http::header::CONTENT_TYPE,
         http::HeaderValue::from_static("application/json"),
     );
-    let msg = json!(Response {
+    let msg = json!(types::Response {
         message: "Internal server error"
     });
     Ok(middleware::errhandlers::ErrorHandlerResponse::Response(
@@ -53,7 +50,7 @@ fn internal_error<B>(
 }
 
 async fn not_found() -> impl Responder {
-    web::HttpResponse::NotFound().json(Response {
+    web::HttpResponse::NotFound().json(types::Response {
         message: "Not found",
     })
 }
