@@ -299,6 +299,7 @@ dependencies = [
  "env_logger",
  "envy",
  "serde",
+ "serde_json",
 ]
 
 [[package]]

@@ -1,6 +1,7 @@
 use actix_cors::Cors;
 use actix_web::{dev, get, http, middleware, web, App, HttpServer, Responder, Result};
 use serde::{Deserialize, Serialize};
+use serde_json::json;
 
 #[derive(Deserialize)]
 struct Config {
@@ -50,8 +51,12 @@ fn internal_error<B>(
         http::header::CONTENT_TYPE,
         http::HeaderValue::from_static("application/json"),
     );
-    // TODO: serialize Response in the response body
-    Ok(middleware::errhandlers::ErrorHandlerResponse::Response(res))
+    let msg = json!(Response {
+        message: "Internal server error"
+    });
+    Ok(middleware::errhandlers::ErrorHandlerResponse::Response(
+        res.map_body(|_, _| dev::ResponseBody::Body(dev::Body::from(msg)).into_body()),
+    ))
 }
 
 async fn not_found() -> impl Responder {
