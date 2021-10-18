@@ -16,8 +16,6 @@ Run the project in dev mode:
 cargo run
 ```
 
-Be precise and concise with this instructions. Link out to any relevant documentation if you need to provide more details on setting up.
-
 ## API Endpoints
 
 The API server defines the following endpoints:

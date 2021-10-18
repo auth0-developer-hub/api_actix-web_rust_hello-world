@@ -1,5 +1,6 @@
 use actix_cors::Cors;
 use actix_web::{dev, get, http, middleware, web, App, HttpServer, Responder, Result};
+use env_logger::Env;
 use serde::{Deserialize, Serialize};
 use serde_json::json;
 
@@ -74,7 +75,7 @@ async fn not_found() -> impl Responder {
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    env_logger::init();
+    env_logger::Builder::from_env(Env::default().default_filter_or("info")).init();
     let config = envy::from_env::<Config>().expect("Provide missing environment variables");
     let client_origin_url = config.client_origin_url;
     HttpServer::new(move || {
