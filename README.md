@@ -2,19 +2,7 @@
 
 You can use this sample project to learn how to secure a simple [Actix Web][actix] API server using Auth0.
 
-<DIAGRAM-OF-SYSTEM-ARCHITECTURE>
-
-The `starter` branch offers a working API server that exposes three public endpoints. Each endpoint returns a different type of message: public, protected, and admin.
-
-The goal is to use Auth0 to only allow requests that contain a valid access token in their authorization header to access the protected and admin data. Additionally, only access tokens that contain a `read:admin-messages` permission should access the admin data, which is referred to as [Role-Based Access Control (RBAC)](https://auth0.com/docs/authorization/rbac/).
-
-[Check out the `add-authorization` branch]() to see authorization in action using Auth0.
-
-[Check out the `add-rbac` branch]() to see authorization and Role-Based Access Control (RBAC) in action using Auth0.
-
 ## Get Started
-
-_TODO: Provide the reader detailed information on how to set up the project such as installing project dependencies and anything required for the reader to run the project successfully. For example, in a Node.js project one may state the following:_
 
 Install the project dependencies:
 
