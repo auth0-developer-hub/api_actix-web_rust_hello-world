@@ -9,6 +9,7 @@ edition = "2018"
 [dependencies]
 actix-cors = "^0.5.4"
 actix-web = "^3.3.2"
+dotenv = "^0.15.0"
 env_logger = "^0.9.0"
 envy = "^0.4.2"
 serde = "^1.0.130"

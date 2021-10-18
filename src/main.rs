@@ -1,28 +1,19 @@
 use actix_cors::Cors;
 use actix_web::{dev, get, http, middleware, web, App, HttpServer, Responder, Result};
+use dotenv::dotenv;
 use env_logger::Env;
 use serde::{Deserialize, Serialize};
 use serde_json::json;
 
 #[derive(Clone, Deserialize)]
 struct Config {
-    #[serde(default = "default_port")]
     port: u16,
-    #[serde(default = "default_client_origin_url")]
     client_origin_url: String,
 }
 
 #[derive(Serialize)]
 struct Response {
     message: &'static str,
-}
-
-fn default_port() -> u16 {
-    6060
-}
-
-fn default_client_origin_url() -> String {
-    "http://localhost:4040".to_string()
 }
 
 #[get("/api/messages/public")]
@@ -69,6 +60,7 @@ async fn not_found() -> impl Responder {
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
+    dotenv().ok();
     env_logger::Builder::from_env(Env::default().default_filter_or("info")).init();
     let config = envy::from_env::<Config>().expect("Provide missing environment variables");
     let client_origin_url = config.client_origin_url;

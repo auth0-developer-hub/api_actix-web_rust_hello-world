@@ -23,6 +23,9 @@ Cargo.lock
 .direnv/
 .envrc
 
+### Dotenv ###
+.env
+
 ### Nix ###
 nix/
 shell.nix
