@@ -3,10 +3,12 @@ use actix_web::{dev, get, http, middleware, web, App, HttpServer, Responder, Res
 use serde::{Deserialize, Serialize};
 use serde_json::json;
 
-#[derive(Deserialize)]
+#[derive(Clone, Deserialize)]
 struct Config {
     #[serde(default = "default_port")]
     port: u16,
+    #[serde(default = "default_client_origin_url")]
+    client_origin_url: String,
 }
 
 #[derive(Serialize)]
@@ -16,6 +18,10 @@ struct Response {
 
 fn default_port() -> u16 {
     6060
+}
+
+fn default_client_origin_url() -> String {
+    "http://localhost:4040".to_string()
 }
 
 #[get("/api/messages/public")]
@@ -39,6 +45,7 @@ async fn admin() -> impl Responder {
     })
 }
 
+// TODO: Remove this endpoint
 #[get("/500")]
 async fn error_500() -> impl Responder {
     web::HttpResponse::InternalServerError()
@@ -69,8 +76,9 @@ async fn not_found() -> impl Responder {
 async fn main() -> std::io::Result<()> {
     env_logger::init();
     let config = envy::from_env::<Config>().expect("Provide missing environment variables");
-    HttpServer::new(|| {
-        let cors = Cors::default().allowed_origin("http://localhost:4040");
+    let client_origin_url = config.client_origin_url;
+    HttpServer::new(move || {
+        let cors = Cors::default().allowed_origin(client_origin_url.as_str());
         App::new()
             .wrap(middleware::Logger::default())
             .wrap(
