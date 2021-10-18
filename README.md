@@ -10,6 +10,20 @@ Install the project dependencies:
 cargo build
 ```
 
+The following settings are configurable via environment variables:
+
+- `CLIENT_ORIGIN_URL` - CORS allowed origin (default `http://localhost:4040`)
+- `PORT` - Application port (default `6060`)
+- `RUST_LOG` - Log level (default `info`)
+
+```bash
+cp .env.example .env
+```
+
+Edit the content of `.env` accordingly.
+
+**Note:** The previous step is optional since all settings have a default value.
+
 Run the project in dev mode:
 
 ```bash
