@@ -46,12 +46,6 @@ async fn admin() -> impl Responder {
     })
 }
 
-// TODO: Remove this endpoint
-#[get("/500")]
-async fn error_500() -> impl Responder {
-    web::HttpResponse::InternalServerError()
-}
-
 fn internal_error<B>(
     mut res: dev::ServiceResponse<B>,
 ) -> Result<middleware::errhandlers::ErrorHandlerResponse<B>> {
@@ -90,7 +84,6 @@ async fn main() -> std::io::Result<()> {
             .service(public)
             .service(protected)
             .service(admin)
-            .service(error_500)
             .default_service(web::to(not_found))
     })
     .bind(("127.0.0.1", config.port))?
