@@ -1,6 +1,6 @@
+use actix_cors::Cors;
 use actix_web::{dev, get, http, middleware, web, App, HttpServer, Responder, Result};
 use serde::{Deserialize, Serialize};
-use std::net::SocketAddr;
 
 #[derive(Deserialize)]
 struct Config {
@@ -52,19 +52,21 @@ async fn main() -> std::io::Result<()> {
     env_logger::init();
     let config = envy::from_env::<Config>().expect("Provide missing environment variables");
     HttpServer::new(|| {
+        let cors = Cors::default().allowed_origin("http://localhost:4040");
         App::new()
+            .wrap(middleware::Logger::default())
             .wrap(
                 middleware::errhandlers::ErrorHandlers::new()
                     .handler(http::StatusCode::INTERNAL_SERVER_ERROR, internal_error)
             )
-            .wrap(middleware::Logger::default())
+            .wrap(cors)
             .service(public)
             .service(protected)
             .service(admin)
             .service(error_500)
             .default_service(web::to(not_found))
     })
-    .bind(SocketAddr::from(([127, 0, 0, 1], config.port)))?
+    .bind(("127.0.0.1", config.port))?
     .run()
     .await
 }
