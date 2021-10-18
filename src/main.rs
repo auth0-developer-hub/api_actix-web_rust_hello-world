@@ -1,7 +1,8 @@
+mod handlers;
 mod types;
 
 use actix_cors::Cors;
-use actix_web::{dev, get, http, middleware, web, App, HttpServer, Responder, Result};
+use actix_web::{dev, http, middleware, web, App, HttpServer, Responder, Result};
 use dotenv::dotenv;
 use env_logger::Env;
 use serde::Deserialize;
@@ -11,27 +12,6 @@ use serde_json::json;
 struct Config {
     port: u16,
     client_origin_url: String,
-}
-
-#[get("/api/messages/public")]
-async fn public() -> impl Responder {
-    web::Json(types::Response {
-        message: "The API doesn't require an access token to share this message.",
-    })
-}
-
-#[get("/api/messages/protected")]
-async fn protected() -> impl Responder {
-    web::Json(types::Response {
-        message: "The API successfully validated your access token.",
-    })
-}
-
-#[get("/api/messages/admin")]
-async fn admin() -> impl Responder {
-    web::Json(types::Response {
-        message: "The API successfully recognized you as an admin.",
-    })
 }
 
 fn internal_error<B>(
@@ -70,9 +50,9 @@ async fn main() -> std::io::Result<()> {
                     .handler(http::StatusCode::INTERNAL_SERVER_ERROR, internal_error),
             )
             .wrap(cors)
-            .service(public)
-            .service(protected)
-            .service(admin)
+            .service(handlers::messages::public)
+            .service(handlers::messages::protected)
+            .service(handlers::messages::admin)
             .default_service(web::to(not_found))
     })
     .bind(("127.0.0.1", config.port))?
