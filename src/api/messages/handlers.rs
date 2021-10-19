@@ -1,23 +1,20 @@
 use crate::api::types::Response;
-use actix_web::{get, web, Responder};
+use actix_web::{web, Responder};
 
-#[get("/api/messages/public")]
-async fn public() -> impl Responder {
+pub async fn admin() -> impl Responder {
     web::Json(Response {
-        message: "The API doesn't require an access token to share this message.",
+        message: "The API successfully recognized you as an admin.",
     })
 }
 
-#[get("/api/messages/protected")]
-async fn protected() -> impl Responder {
+pub async fn protected() -> impl Responder {
     web::Json(Response {
         message: "The API successfully validated your access token.",
     })
 }
 
-#[get("/api/messages/admin")]
-async fn admin() -> impl Responder {
+pub async fn public() -> impl Responder {
     web::Json(Response {
-        message: "The API successfully recognized you as an admin.",
+        message: "The API doesn't require an access token to share this message.",
     })
 }

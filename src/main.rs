@@ -50,9 +50,7 @@ async fn main() -> std::io::Result<()> {
                     .handler(http::StatusCode::INTERNAL_SERVER_ERROR, internal_error),
             )
             .wrap(cors)
-            .service(api::messages::handlers::public)
-            .service(api::messages::handlers::protected)
-            .service(api::messages::handlers::admin)
+            .service(api::routes::routes())
             .default_service(web::to(not_found))
     })
     .bind(("127.0.0.1", config.port))?
