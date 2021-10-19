@@ -4,7 +4,6 @@ use crate::api::types::Response;
 use actix_cors::Cors;
 use actix_web::{dev, http, middleware, web, App, HttpServer, Responder, Result};
 use dotenv::dotenv;
-use env_logger::Env;
 use serde::Deserialize;
 use serde_json::json;
 
@@ -38,7 +37,7 @@ async fn not_found() -> impl Responder {
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     dotenv().ok();
-    env_logger::Builder::from_env(Env::default().default_filter_or("info")).init();
+    env_logger::init();
     let config = envy::from_env::<Config>().expect("Provide missing environment variables");
     let client_origin_url = config.client_origin_url;
     HttpServer::new(move || {
