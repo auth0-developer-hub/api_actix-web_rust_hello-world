@@ -1,6 +1,6 @@
-mod handlers;
-mod types;
+mod api;
 
+use crate::api::types::Response;
 use actix_cors::Cors;
 use actix_web::{dev, http, middleware, web, App, HttpServer, Responder, Result};
 use dotenv::dotenv;
@@ -21,7 +21,7 @@ fn internal_error<B>(
         http::header::CONTENT_TYPE,
         http::HeaderValue::from_static("application/json"),
     );
-    let msg = json!(types::Response {
+    let msg = json!(Response {
         message: "Internal server error"
     });
     Ok(middleware::errhandlers::ErrorHandlerResponse::Response(
@@ -30,7 +30,7 @@ fn internal_error<B>(
 }
 
 async fn not_found() -> impl Responder {
-    web::HttpResponse::NotFound().json(types::Response {
+    web::HttpResponse::NotFound().json(Response {
         message: "Not found",
     })
 }
@@ -50,9 +50,9 @@ async fn main() -> std::io::Result<()> {
                     .handler(http::StatusCode::INTERNAL_SERVER_ERROR, internal_error),
             )
             .wrap(cors)
-            .service(handlers::messages::public)
-            .service(handlers::messages::protected)
-            .service(handlers::messages::admin)
+            .service(api::messages::handlers::public)
+            .service(api::messages::handlers::protected)
+            .service(api::messages::handlers::admin)
             .default_service(web::to(not_found))
     })
     .bind(("127.0.0.1", config.port))?
