@@ -3,5 +3,10 @@
 // https://doc.rust-lang.org/edition-guide/rust-2018/path-changes.html
 // https://doc.rust-lang.org/book/ch07-05-separating-modules-into-different-files.html
 pub mod messages;
-pub mod routes;
 pub mod types;
+
+use actix_web::{web, Scope};
+
+pub fn routes() -> Scope {
+    web::scope("/api").service(messages::routes())
+}

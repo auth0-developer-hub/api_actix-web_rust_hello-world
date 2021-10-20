@@ -20,6 +20,7 @@ fn internal_error<B>(
         http::header::CONTENT_TYPE,
         http::HeaderValue::from_static("application/json"),
     );
+    // TODO: Extract the error message from the original response (separate PR)
     let msg = json!(Response {
         message: "Internal server error"
     });
@@ -49,7 +50,7 @@ async fn main() -> std::io::Result<()> {
                     .handler(http::StatusCode::INTERNAL_SERVER_ERROR, internal_error),
             )
             .wrap(cors)
-            .service(api::routes::routes())
+            .service(api::routes())
             .default_service(web::to(not_found))
     })
     .bind(("127.0.0.1", config.port))?
