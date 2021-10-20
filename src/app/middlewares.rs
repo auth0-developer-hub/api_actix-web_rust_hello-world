@@ -29,7 +29,9 @@ fn internal_error<B>(
     )))
 }
 
-fn not_found<B>(mut res: dev::ServiceResponse<B>) -> Result<errhandlers::ErrorHandlerResponse<B>> {
+fn not_found<B>(
+    mut res: dev::ServiceResponse<B>
+) -> Result<errhandlers::ErrorHandlerResponse<B>> {
     res.headers_mut().insert(
         http::header::CONTENT_TYPE,
         http::HeaderValue::from_static("application/json"),
