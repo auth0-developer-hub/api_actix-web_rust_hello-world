@@ -1,6 +1,11 @@
 use crate::api::types::Response;
+use actix_cors::Cors;
 use actix_web::{dev, http, middleware::errhandlers, Result};
 use serde_json::json;
+
+pub fn cors(client_origin_url: &str) -> Cors {
+    Cors::default().allowed_origin(client_origin_url)
+}
 
 pub fn errhandlers<B: 'static>() -> errhandlers::ErrorHandlers<B> {
     errhandlers::ErrorHandlers::new()
