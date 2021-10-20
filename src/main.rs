@@ -1,38 +1,15 @@
 mod api;
+mod app;
 
-use crate::api::types::Response;
 use actix_cors::Cors;
-use actix_web::{dev, http, middleware, web, App, HttpServer, Responder, Result};
+use actix_web::{middleware, App, HttpServer};
 use dotenv::dotenv;
 use serde::Deserialize;
-use serde_json::json;
 
 #[derive(Clone, Deserialize)]
 struct Config {
     port: u16,
     client_origin_url: String,
-}
-
-fn internal_error<B>(
-    mut res: dev::ServiceResponse<B>,
-) -> Result<middleware::errhandlers::ErrorHandlerResponse<B>> {
-    res.headers_mut().insert(
-        http::header::CONTENT_TYPE,
-        http::HeaderValue::from_static("application/json"),
-    );
-    // TODO: Extract the error message from the original response (separate PR)
-    let msg = json!(Response {
-        message: "Internal server error"
-    });
-    Ok(middleware::errhandlers::ErrorHandlerResponse::Response(
-        res.map_body(|_, _| dev::ResponseBody::Body(dev::Body::from(msg)).into_body()),
-    ))
-}
-
-async fn not_found() -> impl Responder {
-    web::HttpResponse::NotFound().json(Response {
-        message: "Not found",
-    })
 }
 
 #[actix_web::main]
@@ -45,13 +22,9 @@ async fn main() -> std::io::Result<()> {
         let cors = Cors::default().allowed_origin(client_origin_url.as_str());
         App::new()
             .wrap(middleware::Logger::default())
-            .wrap(
-                middleware::errhandlers::ErrorHandlers::new()
-                    .handler(http::StatusCode::INTERNAL_SERVER_ERROR, internal_error),
-            )
+            .wrap(app::middlewares::errhandlers())
             .wrap(cors)
             .service(api::routes())
-            .default_service(web::to(not_found))
     })
     .bind(("127.0.0.1", config.port))?
     .run()
