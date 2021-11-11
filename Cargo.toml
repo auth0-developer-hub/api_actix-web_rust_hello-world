@@ -2,7 +2,8 @@
 name = "api_actix-web_rust_hello-world"
 version = "0.1.0"
 authors = ["Sebastian Estrella <sestrella@stackbuilders.com>"]
-edition = "2018"
+edition = "2021"
+rust-version = "1.56"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 

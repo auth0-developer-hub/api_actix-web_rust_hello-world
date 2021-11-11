@@ -16,11 +16,10 @@ async fn main() -> std::io::Result<()> {
     dotenv().ok();
     env_logger::init();
     let config = envy::from_env::<Config>().expect("Provide missing environment variables");
-    let client_origin_url = config.client_origin_url;
     HttpServer::new(move || {
         App::new()
             .wrap(middleware::Logger::default())
-            .wrap(app::middlewares::cors(&client_origin_url))
+            .wrap(app::middlewares::cors(&config.client_origin_url))
             .wrap(app::middlewares::errhandlers())
             .service(api::routes())
     })
