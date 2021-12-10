@@ -1,28 +1,24 @@
-use actix_web::{get, post, web, App, HttpResponse, HttpServer, Responder};
+mod api;
+mod middlewares;
+mod types;
 
-#[get("/")]
-async fn hello() -> impl Responder {
-    HttpResponse::Ok().body("Hello world!")
-}
-
-#[post("/echo")]
-async fn echo(req_body: String) -> impl Responder {
-    HttpResponse::Ok().body(req_body)
-}
-
-async fn manual_hello() -> impl Responder {
-    HttpResponse::Ok().body("Hey there!")
-}
+use actix_web::{App, HttpServer};
+use dotenv::dotenv;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    HttpServer::new(|| {
+    dotenv().ok();
+    env_logger::init();
+    let config = types::Config::default();
+    HttpServer::new(move || {
         App::new()
-            .service(hello)
-            .service(echo)
-            .route("/hey", web::get().to(manual_hello))
+            .wrap(middlewares::cors(&config.client_origin_url))
+            .wrap(middlewares::err_handlers())
+            .wrap(middlewares::security_headers())
+            .wrap(middlewares::logger())
+            .service(api::routes())
     })
-    .bind("127.0.0.1:8080")?
+    .bind(("127.0.0.1", config.port))?
     .run()
     .await
 }
