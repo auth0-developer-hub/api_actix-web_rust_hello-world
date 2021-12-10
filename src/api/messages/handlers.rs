@@ -1,12 +1,21 @@
 use super::types::Message;
-use crate::extractors::Claims;
-use actix_web::{get, web, Responder};
+use crate::{extractors::Claims, types::ErrorMessage};
+use actix_web::{get, web, Responder, HttpResponse};
+use std::collections::HashSet;
 
 #[get("/admin")]
-pub async fn admin(_claims: Claims) -> impl Responder {
-    web::Json(Message {
-        text: "The API successfully recognized you as an admin.".to_string(),
-    })
+pub async fn admin(claims: Claims) -> impl Responder {
+    if claims.validate_permissions(&HashSet::from(["read:admin-messages".to_string()])) {
+        Ok(web::Json(Message {
+            text: "The API successfully recognized you as an admin.".to_string(),
+        }))
+    } else {
+        Err(HttpResponse::Forbidden().json(ErrorMessage {
+            error: Some("insufficient_permissions".to_string()),
+            error_description: Some("Requires read:admin-messages".to_string()),
+            message: "Permission denied".to_string(),
+        }))
+    }
 }
 
 #[get("/protected")]

@@ -85,6 +85,12 @@ pub struct Claims {
     permissions: Option<HashSet<String>>,
 }
 
+impl Claims {
+    pub fn validate_permissions(&self, required_permissions: &HashSet<String>) -> bool {
+        self.permissions.as_ref().map_or(false, |permissions| permissions.is_superset(required_permissions))
+    }
+}
+
 impl FromRequest for Claims {
     type Error = Error;
     type Future = Pin<Box<dyn Future<Output = Result<Self, Self::Error>>>>;
