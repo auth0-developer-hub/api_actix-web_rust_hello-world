@@ -56,7 +56,9 @@ Status: 200 OK
 
 ```json
 {
-  "message": "The API doesn't require an access token to share this message."
+  "api": "api_actix-web_rust_hello-world",
+  "branch": "starter",
+  "text": "The starter API doesn't require an access token to share this public message."
 }
 ```
 
@@ -76,7 +78,9 @@ Status: 200 OK
 
 ```json
 {
-  "message": "The API successfully validated your access token."
+  "api": "api_actix-web_rust_hello-world",
+  "branch": "starter",
+  "text": "The starter API doesn't require an access token to share this protected message."
 }
 ```
 
@@ -96,7 +100,9 @@ Status: 200 OK
 
 ```json
 {
-  "message": "The API successfully recognized you as an admin."
+  "api": "api_actix-web_rust_hello-world",
+  "branch": "starter",
+  "text": "The starter API doesn't require an access token to share this admin message."
 }
 ```
 
