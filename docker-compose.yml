@@ -1,0 +1,9 @@
+---
+version: "3.9"
+services:
+  hello_world:
+    build: .
+    env_file:
+      - .env
+    ports:
+      - 6060:6060
