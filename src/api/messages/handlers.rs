@@ -7,7 +7,9 @@ use std::collections::HashSet;
 pub async fn admin(claims: Claims) -> impl Responder {
     if claims.validate_permissions(&HashSet::from(["read:admin-messages".to_string()])) {
         Ok(web::Json(Message {
-            text: "The API successfully recognized you as an admin.".to_string(),
+            api: "api_actix-web_rust_hello-world".to_string(),
+            branch: "basic-role-based-access-control".to_string(),
+            text: "The secured API requires a valid access token and the read:admin-messages permission to share this admin message.".to_string(),
         }))
     } else {
         Err(HttpResponse::Forbidden().json(ErrorMessage {
@@ -21,13 +23,17 @@ pub async fn admin(claims: Claims) -> impl Responder {
 #[get("/protected")]
 pub async fn protected(_claims: Claims) -> impl Responder {
     web::Json(Message {
-        text: "The API successfully validated your access token.".to_string(),
+        api: "api_actix-web_rust_hello-world".to_string(),
+        branch: "basic-role-based-access-control".to_string(),
+        text: "The secured API requires a valid access token to share this protected message.".to_string(),
     })
 }
 
 #[get("/public")]
 pub async fn public() -> impl Responder {
     web::Json(Message {
-        text: "The API doesn't require an access token to share this message.".to_string(),
+        api: "api_actix-web_rust_hello-world".to_string(),
+        branch: "basic-role-based-access-control".to_string(),
+        text: "The secured API doesn't require an access token to share this public message.".to_string(),
     })
 }
