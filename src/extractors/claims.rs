@@ -87,7 +87,9 @@ pub struct Claims {
 
 impl Claims {
     pub fn validate_permissions(&self, required_permissions: &HashSet<String>) -> bool {
-        self.permissions.as_ref().map_or(false, |permissions| permissions.is_superset(required_permissions))
+        self.permissions.as_ref().map_or(false, |permissions| {
+            permissions.is_superset(required_permissions)
+        })
     }
 }
 

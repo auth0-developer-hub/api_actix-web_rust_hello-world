@@ -1,0 +1,10 @@
+---
+version: "3.8"
+services:
+  api:
+    build: .
+    image: api_actix-web_rust_hello-world:main
+    env_file:
+      - .env
+    ports:
+      - 6060:6060
