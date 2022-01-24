@@ -8,7 +8,7 @@ RUN mkdir src && \
 COPY src src
 RUN cargo build --release
 
-FROM gcr.io/distroless/cc-debian10
+FROM gcr.io/distroless/cc-debian10@sha256:77ec55818e30899e8999195399a475849c5a66c2f149ebbd7e15a9c5cdca3028
 USER 1000
 COPY --from=builder /app/target/release/api_actix-web_rust_hello-world .
 ENV HOST "0.0.0.0"
