@@ -5,7 +5,7 @@ pub fn security_headers() -> DefaultHeaders {
         .header(header::X_XSS_PROTECTION, "0")
         .header(
             header::STRICT_TRANSPORT_SECURITY,
-            "max-age=31536000 ; includeSubDomains",
+            "max-age=31536000; includeSubDomains",
         )
         .header(header::X_FRAME_OPTIONS, "deny")
         .header(header::X_CONTENT_TYPE_OPTIONS, "nosniff")
