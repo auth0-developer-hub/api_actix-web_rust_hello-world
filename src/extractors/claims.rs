@@ -1,6 +1,6 @@
 use crate::types::ErrorMessage;
+use awc::Client;
 use actix_web::{
-    client::Client,
     error::ResponseError,
     http::{StatusCode, Uri},
     Error, FromRequest, HttpResponse,
@@ -94,7 +94,6 @@ impl Claims {
 impl FromRequest for Claims {
     type Error = Error;
     type Future = Pin<Box<dyn Future<Output = Result<Self, Self::Error>>>>;
-    type Config = ();
 
     fn from_request(
         req: &actix_web::HttpRequest,
@@ -120,9 +119,9 @@ impl FromRequest for Claims {
                         .unwrap(),
                 )
                 .send()
-                .await?
+                .await.unwrap()
                 .json()
-                .await?;
+                .await.unwrap();
             let jwk = jwks
                 .find(&kid)
                 .ok_or_else(|| ClientError::NotFound("No JWK found for kid".to_string()))?;
@@ -130,7 +129,7 @@ impl FromRequest for Claims {
                 AlgorithmParameters::RSA(ref rsa) => {
                     let mut validation = Validation::new(Algorithm::RS256);
                     validation.set_audience(&[config.audience]);
-                    validation.set_iss(&[Uri::builder()
+                    validation.set_issuer(&[Uri::builder()
                         .scheme("https")
                         .authority(domain)
                         .path_and_query("/")

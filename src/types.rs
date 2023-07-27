@@ -1,5 +1,5 @@
+use std::fmt::{Formatter, Result};
 use serde::{Deserialize, Serialize};
-
 #[derive(Deserialize)]
 pub struct Config {
     pub port: u16,
@@ -12,11 +12,17 @@ impl Default for Config {
     }
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, Debug)]
 pub struct ErrorMessage {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub error: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub error_description: Option<String>,
     pub message: String,
+}
+
+impl std::fmt::Display for ErrorMessage {
+    fn fmt(&self, f: &mut Formatter<'_>) -> Result {
+        write!(f, "{}", self.message)
+    }
 }
