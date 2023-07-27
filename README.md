@@ -17,7 +17,7 @@ The recommended way to install Rust is via [Rustup](https://rust-lang.github.io/
 Install the [toolchain](https://rust-lang.github.io/rustup/concepts/toolchains.html):
 
 ```bash
-rustup toolchain install 1.56
+rustup toolchain install 1.71
 ```
 
 Install the project dependencies:
